@@ -10,7 +10,7 @@ public class AppointmentService {
 
     private AppointmentDAO appointmentDAO = new AppointmentDAOImpl();
 
-    public void bookAppointment(AppointmentDTO appointment) {
+    public int bookAppointment(AppointmentDTO appointment) {
 
         boolean available = appointmentDAO.isSlotAvailable(
                 appointment.getDoctorId(),
@@ -18,49 +18,21 @@ public class AppointmentService {
                 appointment.getAppointmentTime());
 
         if (!available) {
-            System.out.println("❌ Slot Already Booked!");
-            return;
+            return -1; // slot booked
         }
 
-        int id = appointmentDAO.bookAppointment(appointment);
-
-        if (id > 0)
-            System.out.println("✅ Appointment Booked Successfully! Your Appointment ID is: " + id);
-        else
-            System.out.println("❌ Booking Failed");
+        return appointmentDAO.bookAppointment(appointment);
     }
 
-    public void cancelAppointment(int appointmentId) {
-        if (appointmentDAO.cancelAppointment(appointmentId))
-            System.out.println("✅ Appointment Cancelled");
-        else
-            System.out.println("❌ Cancellation Failed");
+    public boolean cancelAppointment(int appointmentId) {
+        return appointmentDAO.cancelAppointment(appointmentId);
     }
 
-    public void viewMyAppointments(int patientId) {
-        List<AppointmentDTO> list = appointmentDAO.getAppointmentsByPatient(patientId);
-
-        System.out.println("\n--- My Appointments ---");
-        for (AppointmentDTO a : list) {
-            System.out.println("ID: " + a.getAppointmentId() +
-                    " | Doctor ID: " + a.getDoctorId() +
-                    " | Date: " + a.getAppointmentDate() +
-                    " | Time: " + a.getAppointmentTime() +
-                    " | Status: " + a.getStatus());
-        }
+    public List<AppointmentDTO> getMyAppointments(int patientId) {
+        return appointmentDAO.getAppointmentsByPatient(patientId);
     }
 
-    public void viewAllAppointments() {
-        List<AppointmentDTO> list = appointmentDAO.getAllAppointments();
-
-        System.out.println("\n--- All Appointments ---");
-        for (AppointmentDTO a : list) {
-            System.out.println("ID: " + a.getAppointmentId() +
-                    " | Patient ID: " + a.getPatientId() +
-                    " | Doctor ID: " + a.getDoctorId() +
-                    " | Date: " + a.getAppointmentDate() +
-                    " | Time: " + a.getAppointmentTime() +
-                    " | Status: " + a.getStatus());
-        }
+    public List<AppointmentDTO> getAllAppointments() {
+        return appointmentDAO.getAllAppointments();
     }
 }

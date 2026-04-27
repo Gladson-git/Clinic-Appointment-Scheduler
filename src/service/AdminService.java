@@ -9,21 +9,11 @@ public class AdminService {
 
     private DoctorDAO doctorDAO = new DoctorDAOImpl();
 
-    public void addDoctor(DoctorDTO doctor) {
-        if (doctorDAO.addDoctor(doctor))
-            System.out.println("✅ Doctor Added Successfully!");
-        else
-            System.out.println("❌ Failed to Add Doctor");
+    public boolean addDoctor(DoctorDTO doctor) {
+        return doctorDAO.addDoctor(doctor);
     }
 
-    public void viewDoctors() {
-        List<DoctorDTO> list = doctorDAO.viewAllDoctors();
-
-        System.out.println("\n--- Available Doctors ---");
-        for (DoctorDTO d : list) {
-            System.out.println("ID: " + d.getDoctorId() +
-                               " | Name: " + d.getName() +
-                               " | Specialization: " + d.getSpecialization());
-        }
+    public List<DoctorDTO> getAllDoctors() {
+        return doctorDAO.viewAllDoctors();
     }
 }
